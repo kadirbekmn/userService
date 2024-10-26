@@ -19,11 +19,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**").permitAll()  // H2 console erişimi serbest
-                        .anyRequest().authenticated()  // Diğer istekler kimlik doğrulama ister
+                        .requestMatchers("/api/users/register").permitAll()
+                        .requestMatchers("/api/users/all").hasRole("ADMIN")
+                        .anyRequest().hasRole("USER")
                 )
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))  // Deprecated yapı için güncelleme
-                .httpBasic(withDefaults());  // Basit kimlik doğrulama
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
+                .httpBasic(withDefaults());
 
         return http.build();
     }
