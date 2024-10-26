@@ -17,19 +17,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // CSRF'yi devre dışı bırak
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register").permitAll()  // Kayıt endpoint'i serbest
-                        .anyRequest().authenticated()  // Diğer tüm istekler kimlik doğrulama ister
+                        .requestMatchers("/h2-console/**").permitAll()  // H2 console erişimi serbest
+                        .anyRequest().authenticated()  // Diğer istekler kimlik doğrulama ister
                 )
-                .httpBasic(withDefaults());  // httpBasic() kimlik doğrulama
-
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))  // Deprecated yapı için güncelleme
+                .httpBasic(withDefaults());  // Basit kimlik doğrulama
 
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // Şifreleri hashlemek için BCrypt kullanacağız
+        return new BCryptPasswordEncoder();
     }
 }
